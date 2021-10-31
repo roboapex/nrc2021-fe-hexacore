@@ -37,6 +37,26 @@ while True:
 	contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	output = cv2.drawContours(segmented_img, contours, -1, (0, 0, 255), 3)
 
+	# for i in range(len(contours)):
+	# 	minRect = cv2.minAreaRect(np.zeros((contours[i]), dtype="uint8"))
+	# 	rect_points = cv2.boxPoints(minRect)
+	# 	for j in range(4):
+	# 		cv2.line(image, rect_points[j], rect_points[(j+1)%4], (255,255,0,0))
+
+	for c in contours:
+		x,y,w,h = cv2.boundingRect(c)
+		cv2.putText(output, str(w), (x,y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
+		cv2.rectangle(output, (x, y), (x + w, y + h), (36,255,12), 1)
+
+	# for (int i = 0;i<contours.size();i++)
+  #   {
+  #       RotatedRect minRect = minAreaRect( Mat(contours[i]) );
+  #       Point2f rect_points[4];
+  #       minRect.points( rect_points ); 
+  #       for( int j = 0; j < 4; j++ )
+  #           line( img, rect_points[j], rect_points[(j+1)%4],Scalar(255,255,0),2);
+  #   }
+
 	cv2.imshow("images", output)
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
