@@ -51,4 +51,3 @@ def select(event,x,y,flags,param):
 
 cv2.imshow("Image", image)
 cv2.setMouseCallback("Image", select)
-

@@ -3,15 +3,15 @@
 
 import numpy as np
 import cv2
-import time
+import serial
+
+# ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 
 image = cv2.imread("./test.png")
 
 boundaries = [
-	([17, 15, 100], [200, 56, 200]),
-	([86, 31, 4], [220, 88, 50]),
-	([25, 146, 190], [62, 174, 250]),
-	([103, 86, 65], [145, 133, 128])
+	([0,50,50], [15,255,255], "Red"), # red
+	([35,50,50], [75,255,255], "Green"), # green
 ]
 
 cap = cv2.VideoCapture(0)
@@ -22,42 +22,36 @@ while True:
 		print("Camera Error")
 		break
 
-	lower = np.array(boundaries[0][0], dtype="uint8")
-	upper = np.array(boundaries[0][1], dtype="uint8")
+	for bound in boundaries:
+		lower = np.array(bound[0], dtype="uint8")
+		upper = np.array(bound[1], dtype="uint8")
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+		mask = cv2.inRange(image, lower, upper)
 
-	mask = cv2.inRange(image, lower, upper)
+		# Remove noise
+		# kernel = np.ones((7,7), np.uint8)
+		# mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+		# mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
-	# Remove noise
-	kernel = np.ones((7,7), np.uint8)
-	mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
-	mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+		segmented_img = cv2.bitwise_and(image, image, mask=mask)
 
-	segmented_img = cv2.bitwise_and(image, image, mask=mask)
+		contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+		# image = cv2.drawContours(segmented_img, contours, -1, (0, 0, 255), 3)
 
-	contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-	output = cv2.drawContours(segmented_img, contours, -1, (0, 0, 255), 3)
+		# for c in contours:
+		# 	x,y,w,h = cv2.boundingRect(c)
+		# 	cv2.putText(output, str(w), (x,y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
+		# 	cv2.rectangle(output, (x, y), (x + w, y + h), (36,255,12), 1)
 
-	# for i in range(len(contours)):
-	# 	minRect = cv2.minAreaRect(np.zeros((contours[i]), dtype="uint8"))
-	# 	rect_points = cv2.boxPoints(minRect)
-	# 	for j in range(4):
-	# 		cv2.line(image, rect_points[j], rect_points[(j+1)%4], (255,255,0,0))
+		if len(contours)>0:
+			# print(contours)
+			red_area = max(contours, key=cv2.contourArea)
+			# if cv2.contourArea(red_area) < 50: break
+			(xr,yr,wr,hr) = cv2.boundingRect(red_area)
+			cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
+			cv2.putText(image,f'{bound[2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
-	for c in contours:
-		x,y,w,h = cv2.boundingRect(c)
-		cv2.putText(output, str(w), (x,y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
-		cv2.rectangle(output, (x, y), (x + w, y + h), (36,255,12), 1)
-
-	# for (int i = 0;i<contours.size();i++)
-  #   {
-  #       RotatedRect minRect = minAreaRect( Mat(contours[i]) );
-  #       Point2f rect_points[4];
-  #       minRect.points( rect_points ); 
-  #       for( int j = 0; j < 4; j++ )
-  #           line( img, rect_points[j], rect_points[(j+1)%4],Scalar(255,255,0),2);
-  #   }
-
-	cv2.imshow("images", output)
+	cv2.imshow("images", image)
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
