@@ -1,4 +1,8 @@
 
+// Import Libraries
+#include "Cytron_Shield3AMotor.h"
+#include <Servo.h>
+
 /*
  * serial_usb_simple_arduino - For communicating over USB serial. Send it a '1' (character one) 
  * and it will make the builtin LED start blinking every one second. Send it a '0' 
@@ -8,6 +12,7 @@
  * But send it a commmand it doesn't recognize and it sends back an 'E' for error.
  */
 
+//Declare Variables 
 bool blinking = false;
 bool led_on = false;
 int target_time;
