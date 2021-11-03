@@ -21,11 +21,13 @@ while True:
 	if not isSuccess:
 		print("Camera Error")
 		break
+	
+	image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+	max_countours = []
 
 	for bound in boundaries:
 		lower = np.array(bound[0], dtype="uint8")
 		upper = np.array(bound[1], dtype="uint8")
-		image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 		mask = cv2.inRange(image, lower, upper)
 
 		# Remove noise
@@ -45,11 +47,17 @@ while True:
 
 		if len(contours)>0:
 			# print(contours)
-			red_area = max(contours, key=cv2.contourArea)
+			area = max(contours, key=cv2.contourArea)
 			# if cv2.contourArea(red_area) < 50: break
-			(xr,yr,wr,hr) = cv2.boundingRect(red_area)
-			cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
-			cv2.putText(image,f'{bound[2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+			max_countours.append(area)
+
+	if len(max_countours) > 0:
+		area = max(max_countours, key=cv2.contourArea)
+		(xr,yr,wr,hr) = cv2.boundingRect(area)
+		cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
+		print(area)
+		print(max_countours.index(area))
+		cv2.putText(image,f'{boundaries[max_countours.index(area)][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
 	cv2.imshow("images", image)
 
