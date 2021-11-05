@@ -45,19 +45,19 @@ while True:
 		# 	cv2.putText(output, str(w), (x,y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
 		# 	cv2.rectangle(output, (x, y), (x + w, y + h), (36,255,12), 1)
 
-		if len(contours)>0:
-			# print(contours)
+		if len(contours) > 0:
 			area = max(contours, key=cv2.contourArea)
-			# if cv2.contourArea(red_area) < 50: break
 			max_countours.append(area)
 
 	if len(max_countours) > 0:
 		area = max(max_countours, key=cv2.contourArea)
-		(xr,yr,wr,hr) = cv2.boundingRect(area)
-		cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
-		print(area)
-		print(max_countours.index(area))
-		cv2.putText(image,f'{boundaries[max_countours.index(area)][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+
+		if cv2.contourArea(area) > 7000:
+			(xr,yr,wr,hr) = cv2.boundingRect(area)
+			cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
+
+			if max_max_contour := max_countours.index(area):
+				cv2.putText(image,f'{boundaries[0 if max_max_contour == None else max_max_contour][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
 	cv2.imshow("images", image)
 
