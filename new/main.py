@@ -7,14 +7,12 @@ import cv2
 
 # ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 
-image = cv2.imread("./test.png")
-
 boundaries = [
 	([0,50,50], [15,255,255], "Red"), # red
 	([35,50,50], [75,255,255], "Green"), # green
 ]
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 while True:
 	isSuccess, image = cap.read()
@@ -56,10 +54,13 @@ while True:
 			(xr,yr,wr,hr) = cv2.boundingRect(area)
 			cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
 
-			if max_max_contour := max_countours.index(area):
-				cv2.putText(image,f'{boundaries[0 if max_max_contour == None else max_max_contour][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+			max_max_contour = max_countours.index(area)
+			color = boundaries[0 if max_max_contour == None else max_max_contour][2]
+			height = hr
+			print(color, height)
+			cv2.putText(image,f'{color} {height}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
-	cv2.imshow("images", image)
+	# cv2.imshow("images", image)
 
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
