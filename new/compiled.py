@@ -142,8 +142,6 @@ while True:
     print(max_countours)
     cv2.putText(image,f'{boundaries[max_countours.index(area)][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
-  cv2.imshow("images", image)
-
   # dist = get_distance()
   # if dist <= 4 and area <= 100:
   #   # turn right
