@@ -19,7 +19,7 @@ boundaries = [
   ([35,50,50], [75,255,255], "Green"), # green
 ]
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 in1 = 24
 in2 = 23
