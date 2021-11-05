@@ -3,7 +3,7 @@
 
 import numpy as np
 import cv2
-import serial
+# import serial
 
 # ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 
@@ -14,7 +14,7 @@ boundaries = [
 	([35,50,50], [75,255,255], "Green"), # green
 ]
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while True:
 	isSuccess, image = cap.read()
@@ -60,6 +60,7 @@ while True:
 				cv2.putText(image,f'{boundaries[0 if max_max_contour == None else max_max_contour][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
 	cv2.imshow("images", image)
+
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
