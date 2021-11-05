@@ -6,7 +6,7 @@
 import numpy as np
 import cv2
 import RPi.GPIO as GPIO          
-from time import sleep
+import time
 # import serial
 
 # ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
