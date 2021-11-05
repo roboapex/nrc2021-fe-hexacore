@@ -3,10 +3,13 @@
 
 import numpy as np
 import cv2
+import RPi.GPIO as GPIO          
+from time import sleep
 # import serial
 
 # ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 
+#Set-up
 image = cv2.imread("./test.png")
 
 boundaries = [
@@ -16,6 +19,71 @@ boundaries = [
 
 cap = cv2.VideoCapture(1)
 
+in1 = 24
+in2 = 23
+in3 = 17
+in4 = 27
+en2 = 22
+en1 = 25
+temp1=1
+
+TRIG = 23
+ECHO = 24
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(in1,GPIO.OUT)
+GPIO.setup(in2,GPIO.OUT)
+GPIO.setup(en1,GPIO.OUT)
+GPIO.output(in1,GPIO.LOW)
+GPIO.output(in2,GPIO.LOW)
+GPIO.setup(in3,GPIO.OUT)
+GPIO.setup(in4,GPIO.OUT)
+GPIO.setup(en2,GPIO.OUT)
+GPIO.output(in3,GPIO.LOW)
+GPIO.output(in4,GPIO.LOW)
+p=GPIO.PWM(en,1000)
+
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.OUT)
+
+def get_distance():
+	GPIO.output(TRIG, True)
+	time.sleep(0.00001)
+	GPIO.output(TRIG, False)
+
+	while GPIO.input(ECHO) == 0:
+		pulse_start = time.time()
+
+	while GPIO.input(ECHO) == 1:
+		pulse_end = time.time()
+	pulse_duration = pulse_end - pulse_start
+	distance = pulse_duration * 17150
+	distance = round(distance, 2)
+
+	return distance
+
+p.start(25)
+
+TRIG = 23
+ECHO = 24
+
+def forward():
+	GPIO.output(in1,GPIO.HIGH)
+  GPIO.output(in2,GPIO.LOW)
+
+def backward():
+	GPIO.output(in1,GPIO.LOW)
+  GPIO.output(in2,GPIO.HIGH)
+
+def right():
+	GPIO.output(in1,GPIO.HIGH)
+  GPIO.output(in2,GPIO.HIGH)
+
+def left():
+	GPIO.output(in1,GPIO.LOW)
+  GPIO.output(in2,GPIO.LOW)
+
+forward()
 while True:
 	isSuccess, image = cap.read()
 	if not isSuccess:
@@ -57,9 +125,25 @@ while True:
 		cv2.rectangle(image, (xr,yr),(xr+wr, yr+hr),(255,255,255),2)
 		print(area)
 		print(max_countours.index(area))
+		print(max_countours)
 		cv2.putText(image,f'{boundaries[max_countours.index(area)][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
 	cv2.imshow("images", image)
+
+	dist = get_distance()
+	if dist <= 4 and area <= 100:
+		# turn right
+	elif area >= 200:
+		if boundaries[max_countours.index(area)][2] == "Green":
+			# if block is green
+			# turn left
+			# elif block is red
+			# turn right
+			# else if theres no block
+			# move foward
+		else:
+
+
 
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
