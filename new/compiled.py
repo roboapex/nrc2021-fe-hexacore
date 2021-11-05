@@ -89,14 +89,14 @@ def backward():
 
 def right():
   GPIO.output(in1,GPIO.HIGH)
-  GPIO.output(in2,GPIO.HIGH)
-  GPIO.output(in3,GPIO.HIGH)
+  GPIO.output(in2,GPIO.LOW)
+  GPIO.output(in3,GPIO.LOW)
   GPIO.output(in4,GPIO.HIGH)
 
 def left():
   GPIO.output(in1,GPIO.LOW)
-  GPIO.output(in2,GPIO.LOW)
-  GPIO.output(in3,GPIO.LOW)
+  GPIO.output(in2,GPIO.HIGH)
+  GPIO.output(in3,GPIO.HIGH)
   GPIO.output(in4,GPIO.LOW)
 
 forward()
@@ -145,17 +145,12 @@ while True:
     cv2.putText(image,f'{boundaries[max_countours.index(area)][2]} {hr}', (xr,yr), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
   # dist = get_distance()
-  # if dist <= 4 and area <= 100:
-  #   # turn right
-  # elif area >= 200:
-  #   if boundaries[max_countours.index(area)][2] == "Green":
-  #     # if block is green
-  #     # turn left
-  #     # elif block is red
-  #     # turn right
-  #     # else if theres no block
-  #     # move foward
-  #   else:
+  if area <= 100:
+    right()
+  elif area >= 200:
+    if boundaries[max_countours.index(area)][2] == "Green":
+      left()
+    
 
 
 
