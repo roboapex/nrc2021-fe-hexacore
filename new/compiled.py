@@ -47,8 +47,7 @@ p=GPIO.PWM(en1,1000)
 p2=GPIO.PWM(en2,1000)
 
 
-p.ChangeDutyCycle(75)
-p2.ChangeDutyCycle(75)
+
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.OUT)
 
@@ -69,6 +68,9 @@ def get_distance():
   return distance
 
 p.start(25)
+p2.start(22)
+p.ChangeDutyCycle(75)
+p2.ChangeDutyCycle(75)
 
 TRIG = 23
 ECHO = 24
