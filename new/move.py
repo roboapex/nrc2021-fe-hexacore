@@ -28,7 +28,7 @@ p=GPIO.PWM(en1,1000)
 p2=GPIO.PWM(en2,1000)
 
 p.start(25)
-p2.start(25)
+p2.start(22)
 print("\n")
 print("The default speed & direction of motor is LOW & Forward.....")
 print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
