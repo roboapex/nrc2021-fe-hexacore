@@ -91,7 +91,7 @@ def right():
 	GPIO.output(in2,GPIO.LOW)
 	GPIO.output(in3,GPIO.LOW)
 	GPIO.output(in4,GPIO.HIGH)
-	time.sleep(0.6)
+	time.sleep(0.8)
 	GPIO.output(in1,GPIO.LOW)
 	GPIO.output(in2,GPIO.LOW)
 	GPIO.output(in3,GPIO.LOW)
@@ -175,92 +175,109 @@ while True:
 
 	x = ("00000" + str(index))[-5:]
 	cv2.imwrite(f"data/img{x}.jpg", image)
-	# Contingency pLan: If all condition is not detected, this will run
 	distance = get_distance()
 	print("Distance", distance)
 	# Contingency pLan: If all condition is not detected, this will run
-	if prevHeight == "nope":
-		try:
-			prevHeight = height
-		except:
-			prevHeight = 0
-	if distance < 10:
-		stop()
-		time.sleep(1)
-		backward()
-		time.sleep(1)
-		stop()
-		time.sleep(0.5)
+	if distance > 500:
+		if prevHeight == "nope":
+			try:
+				prevHeight = height
+			except:
+				prevHeight = 0
+		if distance < 10:
+			stop()
+			time.sleep(1)
+			backward()
+			time.sleep(1)
+			stop()
+			time.sleep(0.5)
+			right()
+			stop()
+			time.sleep(0.5)
+			backward()
+			time.sleep(1)
+			stop()
+			time.sleep(0.5)
+			forward()
+		# Green
+		if colour2 == "Green" and height >= 220 and height != prevHeight:
+			if count[0] == "Green":
+				print("runs")
+				prevHeight = height
+				count[1] += 1
+				if count[1] >= 6:
+					print("turning")
+					stop()
+					time.sleep(1)
+					backward()
+					time.sleep(0.5)
+					left()
+					stop()
+					time.sleep(0.4)
+					forward()
+					time.sleep(1)
+					stop()
+					time.sleep(0.4)
+					right()
+					forward()
+					time.sleep(2)
+					right()
+					forward()
+					time.sleep(1)
+					left()
+					forward()
+					count[1] = 0
+			else:
+				count[0] = "Green"
+				count[1] = 0
+		elif colour2 == "Red" and height >= 220 and height != prevHeight:
+			if count[0] == "Red":
+				prevHeight = height
+				count[1] += 1
+				print("hi")
+				if count[1] >= 6:
+					print("turning")
+					stop()
+					time.sleep(1)
+					backward()
+					time.sleep(0.5)
+					right()
+					stop()
+					time.sleep(0.4)
+					forward()
+					time.sleep(1)
+					stop()
+					time.sleep(0.4)
+					left()
+					forward()
+					time.sleep(2)
+					left()
+					forward()
+					time.sleep(1)
+					right()
+					forward()
+					count[1] = 0
+			else:
+				count[0] = "Red"
+				count[1] = 0
+		print(count)
+	else:
+		# if distance <= 40:
+		# 	stop()
+		# 	time.sleep(1)
+		# 	backward()
+		# 	time.sleep(1)
+		# 	right()
+		# 	forward()
+		time.sleep(1.7)
 		right()
-		stop()
-		time.sleep(0.5)
-		backward()
-		time.sleep(1)
-		stop()
-		time.sleep(0.5)
 		forward()
-	# Green
-	if colour2 == "Green" and height >= 220 and height != prevHeight:
-		if count[0] == "Green":
-			print("runs")
-			prevHeight = height
-			count[1] += 1
-			if count[1] >= 6:
-				print("turning")
-				stop()
-				time.sleep(1)
-				backward()
-				time.sleep(0.5)
-				left()
-				stop()
-				time.sleep(0.4)
-				forward()
-				time.sleep(1)
-				stop()
-				time.sleep(0.4)
-				right()
-				forward()
-				time.sleep(2)
-				right()
-				forward()
-				time.sleep(1)
-				left()
-				forward()
-				count[1] = 0
-		else:
-			count[0] = "Green"
-			count[1] = 0
-	elif colour2 == "Red" and height >= 220 and height != prevHeight:
-		if count[0] == "Red":
-			prevHeight = height
-			count[1] += 1
-			print("hi")
-			if count[1] >= 6:
-				print("turning")
-				stop()
-				time.sleep(1)
-				backward()
-				time.sleep(0.5)
-				right()
-				stop()
-				time.sleep(0.4)
-				forward()
-				time.sleep(1)
-				stop()
-				time.sleep(0.4)
-				left()
-				forward()
-				time.sleep(2)
-				left()
-				forward()
-				time.sleep(1)
-				right()
-				forward()
-				count[1] = 0
-		else:
-			count[0] = "Red"
-			count[1] = 0
-	print(count)
+		time.sleep(7.5)
+		break
+
+
+
+
 
 
 
